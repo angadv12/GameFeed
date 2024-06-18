@@ -15,6 +15,7 @@ app.use(express.json()) // Parse JSON bodies
 app.use(express.urlencoded({extended: false})) // Parse URL-encoded bodies
 
 app.use('/api/users', require('./routes/userRoutes'))
+app.use('/api/', require('./routes/scoreRoutes'))
 app.use(errorHandler)
 
 app.listen(port, () => {

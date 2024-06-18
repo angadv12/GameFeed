@@ -1,6 +1,6 @@
 import { FaSignInAlt } from "react-icons/fa"
 import { useState, useContext } from 'react'
-import { AuthContext } from '../auth/AuthContext'
+import { AuthContext } from '../features/auth/AuthContext'
 import { useNavigate } from "react-router-dom"
 
 const RegisterPage = () => {
