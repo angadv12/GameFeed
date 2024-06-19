@@ -9,6 +9,8 @@ import NoHeaderLayout from './layouts/NoHeaderLayout'
 import HomePage from './pages/HomePage'
 import NBApage from './pages/NBApage'
 import NFLpage from './pages/NFLpage'
+import NHLpage from './pages/NHLpage'
+import MLBpage from './pages/MLBpage'
 import NotFoundPage from './pages/NotFoundPage'
 import LoginPage from './pages/LoginPage'
 import RegisterPage from './pages/RegisterPage'
@@ -24,6 +26,8 @@ const App = () => {
       <Route path='/nba' element={<NBApage />} />,
       <Route path='/game/:gameId' element={<GameDetailPage />} />,
       <Route path='/nfl' element={<NFLpage />} />,
+      <Route path='/nhl' element={<NHLpage />} />,
+      <Route path='/mlb' element={<MLBpage />} />,
       <Route path='/login' element={<LoginPage />} />,
       <Route path='/register' element={<RegisterPage />} />,
       <Route path='/profile' element={<ProfilePage />} />,

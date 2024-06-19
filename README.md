@@ -1,3 +1,5 @@
+![Alt text](/frontend/src/assets/GameFeedHomePage.png "Home Page")
+
 # GameFeed
 
 Sports feed app using the MERN stack.

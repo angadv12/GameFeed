@@ -1,4 +1,5 @@
 import hoopSky from '../assets/hoopSky.png';
+import logo from '../assets/BallLogo.png';
 
 const HomePage = () => {
   return (
@@ -9,8 +10,11 @@ const HomePage = () => {
       >
         <div className="absolute inset-0 bg-black opacity-20"></div> {/* Overlay for better text visibility */}
         <div className="relative z-10 flex flex-col justify-center items-center h-full">
-          <h1 className="hero-title text-6xl font-extrabold mb-10">Welcome to GameFeed</h1>
-          <p className="hero-subtitle text-2xl font-bold mb-12">Your Ultimate Sports Companion</p>
+          <div className="hero-title text-6xl font-extrabold mb-10 flex items-center">
+            <p>Welcome to GameFeed</p>
+            <img className="h-24 ml-5" src={logo} alt="logo" />
+          </div>
+          <p className="hero-subtitle text-2xl font-bold mb-4">Your Ultimate Sports Companion</p>
         </div>
       </div>
       <div className="features-section flex justify-around -mt-8 animate-slideIn px-4">

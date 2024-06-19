@@ -1,6 +1,8 @@
 import { Link, useLocation } from "react-router-dom";
 import logo from '../assets/BallLogo.png';
-import { FaArrowRightToBracket, FaUser, FaArrowRightFromBracket, FaBasketball, FaFootball, FaArrowTurnDown } from 'react-icons/fa6';
+import { FaArrowRightToBracket, FaUser, FaArrowRightFromBracket, FaArrowTurnDown,
+  FaBasketball, FaFootball, FaBaseballBatBall, FaHockeyPuck
+ } from 'react-icons/fa6';
 import { useContext, useState, useEffect, useRef } from 'react';
 import { AuthContext } from '../features/auth/AuthContext';
 import showConfirmationAlert from "./ConfirmationAlert";
@@ -57,6 +59,18 @@ const Navbar = () => {
           className={`relative text-white text-lg font-semibold px-2 pt-1 pb-1 mx-3 flex flex-row justify-center items-center ${selectedLeague === '/nfl' ? 'after:absolute after:left-0 after:right-0 after:-bottom-4 after:h-0.5 after:bg-red-500' : ''}`}
         >
           <FaFootball className="mr-2"/> NFL
+        </Link>
+        <Link 
+          to='/nhl' 
+          className={`relative text-white text-lg font-semibold px-2 pt-1 pb-1 mx-3 flex flex-row justify-center items-center ${selectedLeague === '/nhl' ? 'after:absolute after:left-0 after:right-0 after:-bottom-4 after:h-0.5 after:bg-red-500' : ''}`}
+        >
+          <FaHockeyPuck className="mr-2"/> NHL
+        </Link>
+        <Link 
+          to='/mlb' 
+          className={`relative text-white text-lg font-semibold px-2 pt-1 pb-1 mx-3 flex flex-row justify-center items-center ${selectedLeague === '/mlb' ? 'after:absolute after:left-0 after:right-0 after:-bottom-4 after:h-0.5 after:bg-red-500' : ''}`}
+        >
+          <FaBaseballBatBall className="mr-2"/> MLB
         </Link>
       </div>
       <div className="text-white flex items-center absolute right-0 mr-5">
