@@ -15,6 +15,11 @@ const userSchema = mongoose.Schema({
         required: [true, 'Please add a password'],
 
     },
+    profilePicture: {
+        type: String,
+        required: false,
+        default: '../assets/pfpPlaceholder.png'
+    }
 },
 {
     timestamps: true

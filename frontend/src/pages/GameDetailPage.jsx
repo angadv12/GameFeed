@@ -1,5 +1,6 @@
 import { useEffect, useState } from 'react';
 import { useParams } from 'react-router-dom';
+import { FadeLoader } from 'react-spinners';
 
 const GameDetailPage = () => {
   const { gameId } = useParams();
@@ -24,11 +25,13 @@ const GameDetailPage = () => {
   }, [gameId]);
 
   if (loading) {
-    return <div className='text-white font-bold text-center text-xl'>Loading...</div>;
+    return <div className='text-white font-bold text-xl flex justify-center mt-24'>
+      <FadeLoader color="#ffffff" loading={loading} margin={2} />
+    </div>
   }
 
   if (!gameDetails) {
-    return <div>No game or series info available.</div>;
+    return <div className='text-white font-bold text-center mt-10'>No game or series info available.</div>;
   }
 
   const renderTable = (team, teamName) => {
@@ -39,7 +42,7 @@ const GameDetailPage = () => {
     return (
       <div className="mb-8">
         <h3 className="text-2xl mb-4 font-semibold">{teamName}</h3>
-        <table className="min-w-full bg-gray-700 table-fixed">
+        <table className="min-w-full bg-bgNavbar table-fixed">
           <thead className='text-center'>
             <tr>
               <th className="border-b-2 border-gray-600 p-2">Player</th>
@@ -69,7 +72,7 @@ const GameDetailPage = () => {
   };
 
   return (
-    <div className="min-h-screen p-4 bg-slate-800 text-white">
+    <div className="min-h-screen p-4 text-white">
       {(gameDetails.away && gameDetails.home) ? (
         <div>
           <h2 className="text-3xl mb-8 font-bold">Box Score</h2>

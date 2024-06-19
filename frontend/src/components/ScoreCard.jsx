@@ -7,7 +7,7 @@ const ScoreCard = ({ game }) => {
 
   return (
     <Link to={ `/game/${game.gameId}` }>
-      <div className="bg-slate-700 w-72 h-72 p-4 rounded-xl mr-5 flex flex-col justify-evenly">
+      <div className="bg-bgNavbar w-72 h-72 p-4 rounded-xl mr-5 flex flex-col justify-evenly">
         <p className="text-white text-center font-bold text-xl">{game.seriesInfo}</p>
         <div className="flex flex-row"> 
           <div className="flex flex-col items-center flex-1">

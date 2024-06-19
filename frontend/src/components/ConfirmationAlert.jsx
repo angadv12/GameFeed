@@ -14,7 +14,7 @@ const ConfirmationAlert = ({ onConfirm, onCancel }) => (
       </button>
       <button
         onClick={onCancel}
-        className="bg-gray-500 text-white px-4 py-2 mr-4 rounded-md"
+        className="bg-zinc-600 text-white px-4 py-2 mr-4 rounded-md"
       >
         Cancel
       </button>
@@ -44,7 +44,7 @@ const showConfirmationAlert = (onConfirm) => {
       toastClassName: "relative flex p-1 min-h-10 rounded-md justify-between overflow-hidden cursor-pointer",
       bodyClassName: "text-sm font-white font-med block p-3",
       style: {
-        background: "rgba(55, 65, 81)",
+        background: "rgba(60, 60, 60)",
         boxShadow: "0 0.125rem 0.25rem rgba(0, 0, 0, 0.075)"
       }
     }

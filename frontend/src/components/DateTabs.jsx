@@ -47,7 +47,7 @@ const DateTabs = () => {
       {dates.map((date, index) => (
         <button
           key={index}
-          className={` bg-gray-700 inline-block p-2 h-20 mx-1 rounded text-white ${formatDate(date) === formatDate(activeDate) && 'border-2 border-blue-500'}`}
+          className={` bg-bgNavbar inline-block py-2 px-4 h-20 mx-1 rounded text-white ${formatDate(date) === formatDate(activeDate) && 'border-2 border-red-500'}`}
           onClick={() => handleDateClick(date)}
         >
           {date.toLocaleDateString('en-US')}

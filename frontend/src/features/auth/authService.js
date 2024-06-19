@@ -1,5 +1,5 @@
 export const loginUser = async (email, password) => {
-  const response = await fetch('/api/users/login', {
+  const response = await fetch('/api/user/login', {
     method: 'POST',
     headers: {
       'Content-Type': 'application/json'
@@ -9,6 +9,7 @@ export const loginUser = async (email, password) => {
 
   if (response.ok) {
     const data = await response.json()
+    console.log(data.token)
     localStorage.setItem('token', data.token)
     return data
   } else {
@@ -17,7 +18,7 @@ export const loginUser = async (email, password) => {
 }
 
 export const registerUser = async (name, email, password) => {
-  const response = await fetch('/api/users', {
+  const response = await fetch('/api/user', {
     method: 'POST',
     headers: {
       'Content-Type': 'application/json'
@@ -37,7 +38,7 @@ export const registerUser = async (name, email, password) => {
 
 export const getUser = async () => {
   const token = localStorage.getItem('token')
-  const response = await fetch('/api/users/me', {
+  const response = await fetch('/api/user/me', {
     method: 'GET',
     headers: {
       'Content-Type': 'application/json',
@@ -56,3 +57,42 @@ export const getUser = async () => {
 export const logoutUser = () => {
   localStorage.removeItem('token')
 }
+
+export const updateUser = async (token, updates) => {
+  const formData = new FormData();
+  
+  for (const key in updates) {
+    if (updates[key] != '') {
+      formData.append(key, updates[key]);
+    }
+  }
+
+  const response = await fetch('/api/user/update', {
+    method: 'PUT',
+    headers: {
+      Authorization: `Bearer ${token}`,
+    },
+    body: formData,
+  });
+
+  if (response.ok) {
+    return await response.json();
+  } else {
+    const errorData = await response.json();
+    throw new Error(errorData.message || 'Failed to update user');
+  }
+}
+
+export const refreshAccessToken = async () => {
+  const response = await fetch('/api/user/refresh', {
+    method: 'POST',
+    credentials: 'include', // Ensure cookies are sent with the request
+  });
+
+  if (response.ok) {
+    const data = await response.json();
+    return data.accessToken;
+  } else {
+    throw new Error('Failed to refresh access token');
+  }
+};

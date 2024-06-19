@@ -28,7 +28,7 @@ const LoginPage = () => {
     <div className="flex items-center justify-center min-h-screen bg-bgDark">
       <form 
         onSubmit={handleSubmit} 
-        className="w-full max-w-md bg-slate-800 p-8 rounded-lg shadow-lg"
+        className="w-full max-w-md bg-bgNavbar p-8 rounded-lg shadow-lg"
       >
         <h2 className="text-white text-3xl font-bold mb-8 text-center">
           Welcome Back!

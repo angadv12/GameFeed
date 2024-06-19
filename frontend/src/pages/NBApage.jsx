@@ -1,6 +1,6 @@
 import { useContext } from 'react'
 import { NBADataContext } from '../features/NBADataContext'
-import { ScaleLoader } from 'react-spinners'
+import { FadeLoader } from 'react-spinners'
 import ScoreCard from '../components/ScoreCard'
 import DateTabs from '../components/DateTabs'
 
@@ -12,9 +12,9 @@ const NBApage = () => {
       <h1 className='ml-7 font-bold text-3xl text-white mb-3 mt-2'>Scores</h1>
       <DateTabs />
       { loading &&
-            <div className='w-72 h-72 ml-32 mt-16'>
-              <ScaleLoader color="#ffffff" loading={loading} height={35} width={4} radius={2} margin={2} />
-            </div> }
+            <div className='text-white font-bold text-xl flex justify-center mt-24'>
+            <FadeLoader color="#ffffff" loading={loading} margin={2} />
+          </div> }
       { !loading
         && ( scores.length === 0 
           ? (

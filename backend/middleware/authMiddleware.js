@@ -1,6 +1,7 @@
 const asyncHandler = require('express-async-handler')
 const jwt = require('jsonwebtoken')
 const User = require('../models/userModel')
+const { refreshAccessToken } = require('../controllers/userController')
 
 const protect = asyncHandler( async (req, res, next) => {
   let token
@@ -9,7 +10,6 @@ const protect = asyncHandler( async (req, res, next) => {
     try {
         //get token from header
         token = req.headers.authorization.split(' ')[1]
-        //format: 'Bearer token' token is index 1 in split array
 
         //verify token
         const decoded = jwt.verify(token, process.env.JWT_SECRET) //gets payload (id)
@@ -20,13 +20,30 @@ const protect = asyncHandler( async (req, res, next) => {
 
         next()
     } catch (error) {
-        console.log('JWT Verification Error:', error)
-        res.status(401) //401: unauthorized
-        throw new Error('Not authorized, token failed')
+      if (error.name === 'TokenExpiredError') {
+        // Handle token expiration
+        const refreshToken = req.cookies.refreshToken
+        if (refreshToken) {
+          try {
+            await refreshAccessToken(req, res, next)
+          } catch (refreshError) {
+            console.error('Refresh token error:', refreshError);
+            res.status(401);
+            throw new Error('Not authorized, token expired');
+          }
+        } else {
+          res.status(401);
+          throw new Error('Not authorized, no refresh token');
+        }
+      } else {
+        console.log('JWT Verification Error:', error);
+        res.status(401);
+        throw new Error('Not authorized, token failed');
+      }
     }
   } else {
-    res.status(401)
-    throw new Error('Not authorized, no token')
+    res.status(401);
+    throw new Error('Not authorized, no token');
   }
 })
 

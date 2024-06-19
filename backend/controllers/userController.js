@@ -2,9 +2,27 @@ const asyncHandler = require('express-async-handler')
 const jwt = require('jsonwebtoken')
 const bcrypt = require('bcryptjs')
 const User = require('../models/userModel')
+const placeholder = `http://localhost:${process.env.PORT}/assets/pfpPlaceholder.png`
+const fs = require('fs')
+const path = require('path')
+const { saveProfilePicture } = require('../utils/fileUtils')
+
+// @desc  generate json webtoken
+const genJWT = (id) => {
+  return jwt.sign({ id }, process.env.JWT_SECRET, {
+    expiresIn: '15m' // token expires in 15 minutes
+  });
+};
+
+// Generate refresh token
+const genRefreshToken = (id) => {
+  return jwt.sign({ id }, process.env.REFRESH_SECRET, {
+    expiresIn: '7d' // refresh token expires in 7 days
+  });
+};
 
 // @desc  register User
-// @route POST /api/users
+// @route POST /api/user
 // @access Public
 const registerUser = async (req, res) => {
   const { name, email, password } = req.body
@@ -27,13 +45,25 @@ const registerUser = async (req, res) => {
     name,
     email,
     password: hashedPass,
+    profilePicture: placeholder
   })
   if(user) {
+    const token = genJWT(user._id);
+    const refreshToken = genRefreshToken(user._id);
+    
+    // Store refresh token in HTTP-only cookie
+    res.cookie('refreshToken', refreshToken, {
+      httpOnly: true,
+      secure: process.env.NODE_ENV === 'production',
+      sameSite: 'Strict'
+    });
+
     res.status(201).json({ //201: OK and resource created
         _id: user.id,
         name: user.name,
         email: user.email,
-        token: genJWT(user._id)
+        token,
+        profilePicture: user.profilePicture
     })
 } else {
     res.status(400) //Error: bad request
@@ -42,18 +72,29 @@ const registerUser = async (req, res) => {
 }
 
 // @desc login a User
-// @route POST /api/users/login
+// @route POST /api/user/login
 // @access Public
 const loginUser = asyncHandler( async (req, res) => {
   const { email, password } = req.body
 
   const user = await User.findOne({email})
   if(user && (await bcrypt.compare(password, user.password))) {
+    const token = genJWT(user._id);
+    const refreshToken = genRefreshToken(user._id);
+
+    // Store refresh token in HTTP-only cookie
+    res.cookie('refreshToken', refreshToken, {
+      httpOnly: true,
+      secure: process.env.NODE_ENV === 'production',
+      sameSite: 'Strict'
+    });
+
     res.status(200).json({ //200: OK
       _id: user.id,
       name: user.name,
       email: user.email,
-      token: genJWT(user._id)
+      token: token,
+      profilePicture: user.profilePicture
     })
   } else {
     res.status(400) //400: bad request
@@ -62,30 +103,94 @@ const loginUser = asyncHandler( async (req, res) => {
   
 })
 
+// @desc Update user profile
+// @route PUT /api/user/update
+// @access Private
+const updateUser = asyncHandler(async (req, res) => {
+  const userId = req.user.id;
+  const { name, email, password } = req.body;
+
+  const updates = {};
+
+  if (name) updates.name = name
+  if (email) updates.email = email
+  if (password) {
+    const salt = await bcrypt.genSalt(10);
+    updates.password = await bcrypt.hash(password, salt);
+  }
+
+  const user = await User.findById(userId)
+
+  if (req.file) {
+    if(user.profilePicture && user.profilePicture !== placeholder) {
+      const oldFilePath = path.join(__dirname, '../public/assets', path.basename(user.profilePicture))
+      fs.unlink(oldFilePath, (err) => {
+        if (err) console.error('Failed to delete old profile picture:', err);
+      })
+    }
+    updates.profilePicture = await saveProfilePicture(req.file);
+  }
+
+  const updatedUser = await User.findByIdAndUpdate(userId, updates, { new: true });
+
+  if (updatedUser) {
+    res.json({
+      _id: updatedUser.id,
+      name: updatedUser.name,
+      email: updatedUser.email,
+      profilePicture: updatedUser.profilePicture,
+    });
+  } else {
+    res.status(400);
+    throw new Error('Failed to update profile');
+  }
+});
+
 // @desc  get user data
-// @route GET /api/users/me
+// @route GET /api/user/me
 // @access Private
 const getMe = asyncHandler( async (req, res) => {
-  const { _id, name, email } = await User.findById(req.user.id)
+  const { _id, name, email, profilePicture } = await User.findById(req.user.id)
 
   res.status(200).json({
       id: _id,
       name,
       email,
+      profilePicture,
   })
 })
 
-// @desc  generate json webtoken
-const genJWT = (id) =>{
-  return jwt.sign({ id }, process.env.JWT_SECRET, {
-    expiresIn: '30d' //token expires in 30 days
-  })
-}
+const refreshAccessToken = asyncHandler(async (req, res, next) => {
+  const refreshToken = req.cookies.refreshToken;
+  
+  if (!refreshToken) {
+    return res.status(401).json({ message: 'Refresh token not found' });
+  }
+
+  try {
+    const decoded = jwt.verify(refreshToken, process.env.REFRESH_SECRET);
+    const user = await User.findById(decoded.id).select('-password');
+    
+    if (!user) {
+      return res.status(401).json({ message: 'User not found' });
+    }
+
+    const newAccessToken = genJWT(user._id)
+    res.setHeader('Authorization', `Bearer ${newAccessToken}`);
+    res.user = user
+    next()
+  } catch (error) {
+    console.error('Refresh token error:', error);
+    res.status(401).json({ message: 'Invalid refresh token' });
+  }
+});
 
 
 module.exports = {
   registerUser,
   loginUser,
+  updateUser,
   getMe,
   genJWT,
+  refreshAccessToken,
 }
