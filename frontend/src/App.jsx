@@ -16,6 +16,7 @@ import LoginPage from './pages/LoginPage'
 import RegisterPage from './pages/RegisterPage'
 import ProfilePage from './pages/ProfilePage'
 import GameDetailPage from './pages/GameDetailPage';
+import SportsNewsPage from './pages/SportsNewsPage'
 
 const App = () => {
 
@@ -31,6 +32,7 @@ const App = () => {
       <Route path='/login' element={<LoginPage />} />,
       <Route path='/register' element={<RegisterPage />} />,
       <Route path='/profile' element={<ProfilePage />} />,
+      <Route path='/sports-news' element={<SportsNewsPage />} />,
     </Route>
 
     <Route path='*' element={<NoHeaderLayout />}>

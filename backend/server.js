@@ -6,6 +6,7 @@ const {errorHandler} = require('./middleware/errorMiddleware')
 const connectDB = require('./config/db')
 const cookieParser = require('cookie-parser');
 const path = require('path')
+const cors = require('cors')
 
 const port = process.env.PORT
 
@@ -14,13 +15,17 @@ const app = express()
 
 app.use('/assets', express.static(path.join(__dirname, 'public/assets')))
 
-//middleware
+// middleware
 app.use(express.json()) // Parse JSON bodies
 app.use(express.urlencoded({extended: false})) // Parse URL-encoded bodies
 app.use(cookieParser()) // Parse cookies
+app.use(cors())
 
+// routes
 app.use('/api/user', require('./routes/userRoutes'))
 app.use('/api/', require('./routes/scoreRoutes'))
+app.use('/api/', require('./routes/newsRoutes'))
+app.use('/api/comments', require('./routes/commentRoutes'))
 app.use(errorHandler)
 
 app.listen(port, () => {

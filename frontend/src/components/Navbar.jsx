@@ -1,7 +1,7 @@
 import { Link, useLocation } from "react-router-dom";
 import logo from '../assets/BallLogo.png';
 import { FaArrowRightToBracket, FaUser, FaArrowRightFromBracket, FaArrowTurnDown,
-  FaBasketball, FaFootball, FaBaseballBatBall, FaHockeyPuck
+  FaBasketball, FaFootball, FaBaseballBatBall, FaHockeyPuck, FaNewspaper
  } from 'react-icons/fa6';
 import { useContext, useState, useEffect, useRef } from 'react';
 import { AuthContext } from '../features/auth/AuthContext';
@@ -52,25 +52,31 @@ const Navbar = () => {
           to='/nba' 
           className={`relative text-white text-lg font-semibold px-2 pt-1 pb-1 mx-3 flex flex-row justify-center items-center ${selectedLeague === '/nba' ? 'after:absolute after:left-0 after:right-0 after:-bottom-4 after:h-0.5 after:bg-red-500' : ''}`}
         >
-          <FaBasketball className="mr-2"/> NBA
+          <FaBasketball className="mr-2 text-orange-400"/> NBA
         </Link>
         <Link 
           to='/nfl' 
           className={`relative text-white text-lg font-semibold px-2 pt-1 pb-1 mx-3 flex flex-row justify-center items-center ${selectedLeague === '/nfl' ? 'after:absolute after:left-0 after:right-0 after:-bottom-4 after:h-0.5 after:bg-red-500' : ''}`}
         >
-          <FaFootball className="mr-2"/> NFL
+          <FaFootball className="mr-2 text-amber-800"/> NFL
         </Link>
         <Link 
           to='/nhl' 
           className={`relative text-white text-lg font-semibold px-2 pt-1 pb-1 mx-3 flex flex-row justify-center items-center ${selectedLeague === '/nhl' ? 'after:absolute after:left-0 after:right-0 after:-bottom-4 after:h-0.5 after:bg-red-500' : ''}`}
         >
-          <FaHockeyPuck className="mr-2"/> NHL
+          <FaHockeyPuck className="mr-2 text-blue-300"/> NHL
         </Link>
         <Link 
           to='/mlb' 
           className={`relative text-white text-lg font-semibold px-2 pt-1 pb-1 mx-3 flex flex-row justify-center items-center ${selectedLeague === '/mlb' ? 'after:absolute after:left-0 after:right-0 after:-bottom-4 after:h-0.5 after:bg-red-500' : ''}`}
         >
-          <FaBaseballBatBall className="mr-2"/> MLB
+          <FaBaseballBatBall className="mr-2 text-red-400"/> MLB
+        </Link>
+        <Link 
+          to='/sports-news' 
+          className={`relative text-white text-lg font-semibold px-2 pt-1 pb-1 mx-3 flex flex-row justify-center items-center ${selectedLeague === '/sports-news' ? 'after:absolute after:left-0 after:right-0 after:-bottom-4 after:h-0.5 after:bg-red-500' : ''}`}
+        >
+          <FaNewspaper className="mr-2 text-neutral-500"/> News
         </Link>
       </div>
       <div className="text-white flex items-center absolute right-0 mr-5">
@@ -78,7 +84,7 @@ const Navbar = () => {
           <>
             <div className="relative" ref={dropdownRef}>
               <img
-                className="w-10 h-10 rounded-full cursor-pointer"
+                className="w-11 h-11 rounded-full object-cover cursor-pointer"
                 src={user.profilePicture}
                 alt="Profile"
                 onClick={toggleDropdown}

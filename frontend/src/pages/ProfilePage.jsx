@@ -42,7 +42,7 @@ const ProfilePage = () => {
           <form onSubmit={handleUpdate}>
             <div className="flex flex-col items-center">
               <img
-                className="w-32 h-32 rounded-full mb-4"
+                className="w-32 h-32 rounded-full object-cover mb-4"
                 src={user.profilePicture}
                 alt="Profile"
               />

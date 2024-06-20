@@ -1,6 +1,6 @@
 const asyncHandler = require('express-async-handler')
 const jwt = require('jsonwebtoken')
-const User = require('../models/userModel')
+const User = require('../models/User')
 const { refreshAccessToken } = require('../controllers/userController')
 
 const protect = asyncHandler( async (req, res, next) => {

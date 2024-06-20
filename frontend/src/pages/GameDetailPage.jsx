@@ -1,6 +1,7 @@
 import { useEffect, useState } from 'react';
 import { useParams } from 'react-router-dom';
 import { FadeLoader } from 'react-spinners';
+import Comments from '../components/Comments';
 
 const GameDetailPage = () => {
   const { gameId } = useParams();
@@ -92,6 +93,7 @@ const GameDetailPage = () => {
           ))}
         </div>
       )}
+      <Comments gameId={gameId} />
     </div>
   );
 };
