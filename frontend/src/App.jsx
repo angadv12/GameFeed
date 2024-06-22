@@ -15,6 +15,7 @@ import NotFoundPage from './pages/NotFoundPage'
 import LoginPage from './pages/LoginPage'
 import RegisterPage from './pages/RegisterPage'
 import ProfilePage from './pages/ProfilePage'
+import EditProfilePage from './pages/EditProfilePage'
 import GameDetailPage from './pages/GameDetailPage';
 import SportsNewsPage from './pages/SportsNewsPage'
 
@@ -31,7 +32,9 @@ const App = () => {
       <Route path='/mlb' element={<MLBpage />} />,
       <Route path='/login' element={<LoginPage />} />,
       <Route path='/register' element={<RegisterPage />} />,
-      <Route path='/profile' element={<ProfilePage />} />,
+      <Route path='/profile' element={<ProfilePage />}/>,
+      <Route path='/profile/:username' element={<ProfilePage />} />,
+      <Route path='/edit-profile' element={<EditProfilePage />} />,
       <Route path='/sports-news' element={<SportsNewsPage />} />,
     </Route>
 

@@ -1,100 +1,35 @@
-import { useEffect, useState } from 'react';
+import { useState } from 'react';
 import { useParams } from 'react-router-dom';
-import { FadeLoader } from 'react-spinners';
+import BoxScore from '../components/BoxScore';
 import Comments from '../components/Comments';
+import GameInsights from '../components/GameInsights';
 
 const GameDetailPage = () => {
+  const [ activePage, setActivePage ] = useState('BoxScore');
   const { gameId } = useParams();
-  const [gameDetails, setGameDetails] = useState(null);
-  const [loading, setLoading] = useState(true);
 
-  useEffect(() => {
-    const fetchGameDetails = async () => {
-      setLoading(true);
-      try {
-        const response = await fetch(`/api/game-details/${gameId}`);
-        const data = await response.json();
-        setGameDetails(data);
-      } catch (error) {
-        console.error('Error fetching game details:', error);
-      } finally {
-        setLoading(false);
-      }
-    };
-
-    fetchGameDetails();
-  }, [gameId]);
-
-  if (loading) {
-    return <div className='text-white font-bold text-xl flex justify-center mt-24'>
-      <FadeLoader color="#ffffff" loading={loading} margin={2} />
-    </div>
+  const handleActivePage = (page) => {
+    setActivePage(page)
   }
-
-  if (!gameDetails) {
-    return <div className='text-white font-bold text-center mt-10'>No game or series info available.</div>;
-  }
-
-  const renderTable = (team, teamName) => {
-    if (team.length === 0) return null;
-
-    const statCategories = Object.keys(team[0]).filter(key => key !== 'player' && key !== 'comment' && key !== 'face');
-
-    return (
-      <div className="mb-8">
-        <h3 className="text-2xl mb-4 font-semibold">{teamName}</h3>
-        <table className="min-w-full bg-bgNavbar table-fixed">
-          <thead className='text-center'>
-            <tr>
-              <th className="border-b-2 border-gray-600 p-2">Player</th>
-              {statCategories.map(category => (
-                <th key={category} className="border-b-2 border-gray-600 p-2">{category}</th>
-              ))}
-              <th className="border-b-2 border-gray-600 p-2">Comment</th>
-            </tr>
-          </thead>
-          <tbody className='text-center'>
-            {team.map((player, index) => (
-              <tr key={index} className="border-b border-gray-600">
-                <td className="p-2 flex items-center">
-                  <img className="h-8 mr-2 rounded-full" src={player.face} alt="" />
-                  {player.player}
-                </td>
-                {statCategories.map(category => (
-                  <td key={category} className="p-2">{player[category]}</td>
-                ))}
-                <td className="p-2">{player.comment}</td>
-              </tr>
-            ))}
-          </tbody>
-        </table>
-      </div>
-    );
-  };
-
   return (
-    <div className="min-h-screen p-4 text-white">
-      {(gameDetails.away && gameDetails.home) ? (
-        <div>
-          <h2 className="text-3xl mb-8 font-bold">Box Score</h2>
-          {renderTable(gameDetails.away, gameDetails.awayTeam)}
-          {renderTable(gameDetails.home, gameDetails.homeTeam)}
-        </div>
-      ) : (
-        <div>
-          <h2 className="text-3xl mb-8 font-bold">Previous Games</h2>
-          {gameDetails.map((game, index) => (
-            <div key={index} className="mb-4">
-              <p>
-                {game.awayTeam.team} {game.awayTeam.score} - {game.homeTeam.team} {game.homeTeam.score}
-              </p>
-              <p>{game.gameStatus}</p>
-            </div>
-          ))}
-        </div>
-      )}
-      <Comments gameId={gameId} />
+    <>
+    <div className='text-white font-bold mt-4'>
+      <button className="bg-bgNavbar py-2 px-4 rounded-lg ml-4 hover:bg-zinc-700" onClick={() => handleActivePage('BoxScore')}>
+        Box Score
+      </button>
+      <button className="bg-bgNavbar py-2 px-4 rounded-lg ml-2 hover:bg-zinc-700" onClick={() => handleActivePage('Comments')}>
+        Comments
+      </button>
+      <button className="bg-bgNavbar py-2 px-4 rounded-lg ml-2 hover:bg-zinc-700" onClick={() => handleActivePage('GameInsights')}>
+        Game Insights
+      </button>
     </div>
+    <section>
+      {activePage === 'BoxScore' && <BoxScore gameId={gameId}/>}
+      {activePage === 'Comments' && <Comments gameId={gameId}/>}
+      {activePage === 'GameInsights' && <GameInsights gameId={gameId}/>}
+    </section>
+    </>
   );
 };
 

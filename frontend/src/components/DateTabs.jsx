@@ -43,7 +43,7 @@ const DateTabs = () => {
   }, []);
 
   return (
-    <div className="overflow-x-auto whitespace-nowrap ml-5 mb-5">
+    <div className="overflow-x-auto whitespace-nowrap mx-5 mb-5">
       {dates.map((date, index) => (
         <button
           key={index}

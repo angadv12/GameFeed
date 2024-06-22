@@ -17,13 +17,13 @@ export const loginUser = async (email, password) => {
   }
 }
 
-export const registerUser = async (name, email, password) => {
+export const registerUser = async (name, username, email, password) => {
   const response = await fetch('/api/user', {
     method: 'POST',
     headers: {
       'Content-Type': 'application/json'
     },
-    body: JSON.stringify({ name, email, password })
+    body: JSON.stringify({ name, username, email, password })
   })
 
   if (response.ok) {
@@ -81,6 +81,58 @@ export const updateUser = async (token, updates) => {
     const errorData = await response.json();
     throw new Error(errorData.message || 'Failed to update user');
   }
+}
+
+export const deleteUser = async (token) => {
+  const response = await fetch('/api/user/delete', {
+    method: 'DELETE',
+    headers: {
+      'Content-Type': 'application/json',
+      Authorization: `Bearer ${token}`,
+    }
+  })
+  if (response.ok) {
+    return await response.json()
+  } else {
+    const errorData = await response.json()
+    throw new Error(errorData.message || 'Failed to delete user')
+  }
+
+}
+
+export const followUser = async (token, userId) => {
+  const response = await fetch(`/api/user/${userId}/follow`, {
+    method: 'POST',
+    headers: {
+      'Content-Type': 'application/json',
+      Authorization: `Bearer ${token}`,
+    },
+  });
+
+  if (response.ok) {
+    return await response.json();
+  } else {
+    const errorData = await response.json();
+    throw new Error(errorData.message || 'Failed to follow user');
+  }
+}
+
+export const unfollowUser = async (token, userId) => {
+  const response = await fetch(`/api/user/${userId}/unfollow`, {
+    method: 'POST',
+    headers: {
+      'Content-Type': 'application/json',
+      Authorization: `Bearer ${token}`,
+    },
+  });
+
+  if (response.ok) {
+    return await response.json();
+  } else {
+    const errorData = await response.json();
+    throw new Error(errorData.message || 'Failed to unfollow user');
+  }
+
 }
 
 export const refreshAccessToken = async () => {

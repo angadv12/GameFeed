@@ -1,106 +1,208 @@
-import { useContext, useState } from "react";
-import { AuthContext } from "../features/auth/AuthContext";
-import { FaUser } from "react-icons/fa6";
+import { useContext, useState, useEffect} from "react";
+import { AuthContext } from "../features/auth/AuthContext"
+import { FaUser, FaPencil } from "react-icons/fa6";
+import { Link, useParams } from "react-router-dom";
+import FollowersModal from "../components/FollowersModal";
+import FollowingModal from "../components/FollowingModal";
 
 const ProfilePage = () => {
-  const { user, updateProfile } = useContext(AuthContext);
-  const [name, setName] = useState(user?.name || '');
-  const [email, setEmail] = useState(user?.email || '');
-  const [password, setPassword] = useState('');
-  const [profilePicture, setProfilePicture] = useState(null);
+  const { user: loggedInUser, follow, unfollow } = useContext(AuthContext)
+  const { username } = useParams()
+  const [profileUser, setProfileUser] = useState(null)
+  const [showFollowersModal, setShowFollowersModal] = useState(false)
+  const [showFollowingModal, setShowFollowingModal] = useState(false)
+  const [followers, setFollowers] = useState([])
+  const [following, setFollowing] = useState([])
 
-  const handleProfilePictureChange = (e) => {
-    setProfilePicture(e.target.files[0]);
-  };
-
-  const handleUpdate = async (e) => {
-    e.preventDefault();
-
-    const updates = {
-      name,
-      email,
-      password,
-      profilePicture,
-    }
-
+  const fetchProfileData = async (username) => {
     try {
-      await updateProfile(updates)
-      alert('Profile updated successfully')
+      const response = await fetch(`/api/user/username/${username}`, {
+        method: 'GET',
+        headers: {
+          'Content-Type': 'application/json',
+          Authorization: `Bearer ${localStorage.getItem('token')}`,
+        },
+      });
+      if (response.ok) {
+        const data = await response.json()
+        setProfileUser(data)
+      } else {
+        console.error("Error fetching user data:", response.statusText)
+        setProfileUser(null)
+      }
     } catch (error) {
-      console.error('Error updating profile:', error)
-      alert('Failed to update profile. Please try again.')
+      console.error("Error fetching user data:", error)
+      setProfileUser(null)
     }
   };
+
+  useEffect(() => {
+    const fetchUser = async () => {
+      if (username) {
+        if(loggedInUser && loggedInUser.username === username) {
+          setProfileUser(loggedInUser)
+        } else {
+          await fetchProfileData(username)
+        }
+      } else {
+        if (loggedInUser) {
+          setProfileUser(loggedInUser)
+        } else {
+          setProfileUser(null)
+        }
+      }
+    };
+
+    fetchUser();
+  }, [username, loggedInUser])
+
+  const handleFollow = async () => {
+    try {
+      await follow(profileUser._id)
+      await fetchProfileData(profileUser.username)
+    } catch (error) {
+      console.error('Error following user:', error)
+    }
+  }
+
+  const handleUnfollow = async () => {
+    try {
+      await unfollow(profileUser._id)
+      await fetchProfileData(profileUser.username)
+    } catch (error) {
+      console.error('Error unfollowing user:', error)
+    }
+  }
+
+  const handleShowFollowers = async () => {
+    try {
+      const response = await fetch(`/api/user/${profileUser._id}/followers`, {
+        headers: {
+          'Authorization': `Bearer ${localStorage.getItem('token')}`,
+        },
+      });
+      if (response.ok) {
+        const followersData = await response.json();
+        setFollowers(followersData);
+        setShowFollowersModal(true);
+      } else {
+        console.error("Error fetching followers:", response.statusText);
+      }
+    } catch (error) {
+      console.error("Error fetching followers:", error);
+    }
+  }
+
+  const handleShowFollowing = async () => {
+    try {
+      const response = await fetch(`/api/user/${profileUser._id}/following`, {
+        headers: {
+          'Authorization': `Bearer ${localStorage.getItem('token')}`,
+        },
+      });
+      if (response.ok) {
+        const followingData = await response.json();
+        setFollowing(followingData);
+        setShowFollowingModal(true);
+      } else {
+        console.error("Error fetching following:", response.statusText);
+      }
+    } catch (error) {
+      console.error("Error fetching following:", error);
+    }
+  }
 
   return (
-    <div className="min-h-screen flex items-center justify-center">
-      <div className="bg-bgNavbar rounded-xl shadow-lg p-8 w-full max-w-md">
-        <h1 className="text-white font-bold text-3xl flex flex-row items-center justify-center mb-6">
-          <FaUser className="mr-3" /> Profile
+    <div className="min-h-screen relative flex items-center justify-center">
+      <div className="bg-bgNavbar absolute top-4 rounded-xl shadow-lg px-8 py-6 my-6 w-full max-w-2xl">
+        <h1 className="text-white font-bold text-4xl flex items-center relative ml-6 mt-6 mb-8">
+          <p className="flex items-center absolute left-1/2 -translate-x-1/2">
+            <FaUser className="mr-4" /> Profile
+          </p>
+          {loggedInUser && profileUser && loggedInUser.username === profileUser.username && (
+            <Link to="/edit-profile" className="flex items-center text-xl mr-6 bg-zinc-700 px-4 py-1 rounded-lg absolute -right-8">
+              <FaPencil className="mr-4" /> Edit
+            </Link>
+          )}
         </h1>
-        {user ? (
-          <form onSubmit={handleUpdate}>
-            <div className="flex flex-col items-center">
+        {profileUser ? (
+          <div className="flex flex-col">
+            {/* User info section */}
+            <div className="bg-zinc-800 rounded-xl py-4 px-4">
               <img
-                className="w-32 h-32 rounded-full object-cover mb-4"
-                src={user.profilePicture}
+                className="w-52 h-52 mr-8 rounded-full float-left object-cover mb-4"
+                src={profileUser.profilePicture}
                 alt="Profile"
               />
-              <label className="text-white text-center font-semibold text-xl mb-3">
-                <p className="mb-2">Change Profile Picture:</p>
-                <input
-                  type="file"
-                  accept="image/*"
-                  onChange={handleProfilePictureChange}
-                  className="block w-full text-sm cursor-pointer file:cursor-pointer text-gray-500 file:mr-4 file:py-2 file:px-4 file:rounded-full file:border-0 file:text-sm file:font-semibold file:bg-violet-50 file:text-green-600 hover:file:bg-violet-100"
-                />
-              </label>
-              <label className="text-white text-center font-semibold text-xl mb-3">
-                Name:
-                <input
-                  type="text"
-                  value={name}
-                  onChange={(e) => setName(e.target.value)}
-                  placeholder="Name"
-                  className="block w-full text-gray-900 p-2 rounded"
-                />
-              </label>
-              <label className="text-white text-center font-semibold text-xl mb-3">
-                Email:
-                <input
-                  type="email"
-                  value={email}
-                  onChange={(e) => setEmail(e.target.value)}
-                  placeholder="Email"
-                  className="block w-full text-gray-900 p-2 rounded"
-                />
-              </label>
-              <label className="text-white text-center font-semibold text-xl mb-3">
-                Password:
-                <input
-                  type="password"
-                  value={password}
-                  onChange={(e) => setPassword(e.target.value)}
-                  placeholder="Password"
-                  className="block w-full text-gray-900 p-2 rounded"
-                />
-              </label>
-              <button
-                type="submit"
-                className="mt-4 bg-blue-500 text-white font-bold py-2 px-4 rounded hover:bg-blue-700"
-              >
-                Update Profile
-              </button>
+              <h1 className="text-white font-extrabold text-3xl mt-12 mb-2">User Info:</h1>
+              <div className="text-white font-bold text-xl">
+                <p className="mb-2"> Name: <span className="ml-2">{profileUser.name}</span> </p>
+                <p className="mb-2"> @{profileUser.username} </p>
+              </div>
             </div>
-          </form>
+            {/* Followers and Following section */}
+            <div className="bg-zinc-800 rounded-xl py-4 px-4 mt-4 flex items-center justify-evenly">
+              <div className="flex flex-col items-center">
+                <p className="text-white font-bold text-3xl mb-2">Followers: <span className="ml-2">{profileUser.followers.length}</span></p>
+                {loggedInUser ? (
+                  loggedInUser.username !== profileUser.username ? (
+                    loggedInUser.following.includes(profileUser._id) ? (
+                      <div>
+                        <button className="text-white font-semibold text-xl bg-blue-500 px-4 py-2 rounded-lg mr-2" onClick={handleUnfollow}>
+                          Unfollow
+                        </button>
+                        <button className="text-white font-semibold text-xl bg-blue-500 px-4 py-2 rounded-lg" onClick={handleShowFollowers}>
+                          See Followers
+                        </button>
+                      </div>
+                    ) : (
+                      <button className="text-white font-semibold text-xl bg-blue-500 px-4 py-2 rounded-lg" onClick={handleFollow}>
+                        Follow
+                      </button>
+                    )
+                  ) : (
+                    <button className="text-white font-semibold text-xl bg-blue-500 px-4 py-2 rounded-lg" onClick={handleShowFollowers}>
+                      See Followers
+                    </button>
+                  )
+                ) : (
+                  <button className="text-white font-semibold text-xl bg-blue-500 px-4 py-2 rounded-lg" disabled>
+                    Login to interact
+                  </button>
+                )}
+              </div>
+              <div className="flex flex-col items-center">
+                <p className="text-white font-bold text-3xl mb-2">Following: <span className="ml-2">{profileUser.following.length}</span></p>
+                <button className="text-white font-semibold text-xl bg-blue-500 px-4 py-2 rounded-lg" onClick={handleShowFollowing}>
+                  See Following
+                </button>
+              </div>
+            </div>
+          </div>
+        ) : loggedInUser ? (
+          <div className="text-white text-center font-bold text-3xl mt-10">
+            User not found
+          </div>
         ) : (
           <div className="text-white text-center font-bold text-3xl mt-10">
-            Please login to view your profile
+            Please login to view profile
           </div>
         )}
       </div>
+      {showFollowersModal && (
+        <FollowersModal 
+          followers={followers}
+          onClose={() => setShowFollowersModal(false)}
+        />
+      )}
+      {showFollowingModal && (
+        <FollowingModal 
+          following={following}
+          onClose={() => setShowFollowingModal(false)}
+        />
+      )}
     </div>
-  );
-};
+  )
+}
 
 export default ProfilePage;

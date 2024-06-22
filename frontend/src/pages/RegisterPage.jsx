@@ -6,6 +6,7 @@ import { useNavigate } from "react-router-dom"
 const RegisterPage = () => {
   const { register } = useContext(AuthContext)
   const [name, setName] = useState('')
+  const [username, setUsername] = useState('')
   const [email, setEmail] = useState('')
   const [password, setPassword] = useState('')
   const [error, setError] = useState('')
@@ -14,7 +15,7 @@ const RegisterPage = () => {
   const handleSubmit = async (e) => {
     e.preventDefault()
     try {
-      await register(name, email, password)
+      await register(name, username, email, password)
       setError('')
       navigate('/')
     } catch (err) {
@@ -42,6 +43,17 @@ const RegisterPage = () => {
             placeholder="Name"
             value={name}
             onChange={(e) => setName(e.target.value)}
+          />
+        </div>
+        <div className="mb-4">
+          <label className="block text-gray-300 mb-2" htmlFor="username">Username</label>
+          <input
+            type="text"
+            id="username"
+            className="w-full px-3 py-2 text-gray-900 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500"
+            placeholder="Username"
+            value={username}
+            onChange={(e) => setUsername(e.target.value)}
           />
         </div>
         <div className="mb-4">

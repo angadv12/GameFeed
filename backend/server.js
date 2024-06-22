@@ -23,7 +23,7 @@ app.use(cors())
 
 // routes
 app.use('/api/user', require('./routes/userRoutes'))
-app.use('/api/', require('./routes/scoreRoutes'))
+app.use('/api/', require('./routes/nbaRoutes'))
 app.use('/api/', require('./routes/newsRoutes'))
 app.use('/api/comments', require('./routes/commentRoutes'))
 app.use(errorHandler)

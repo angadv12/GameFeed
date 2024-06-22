@@ -5,6 +5,11 @@ const userSchema = mongoose.Schema({
         type: String,
         required: [true, 'Please add a valid name']
     },
+    username: {
+        type: String,
+        required: [true, 'Please add a username'],
+        unique: true
+    },
     email: {
         type: String,
         required: [true, 'Please add a valid email'],
@@ -19,7 +24,19 @@ const userSchema = mongoose.Schema({
         type: String,
         required: false,
         default: '../assets/pfpPlaceholder.png'
-    }
+    },
+    followers: [
+        {
+            type: mongoose.Schema.Types.ObjectId,
+            ref: 'User'
+        }
+    ],
+    following: [
+        {
+            type: mongoose.Schema.Types.ObjectId,
+            ref: 'User'
+        }
+    ]
 },
 {
     timestamps: true

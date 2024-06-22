@@ -9,7 +9,7 @@ const NBApage = () => {
 
   return (
     <section className="min-h-screen relative">
-      <h1 className='ml-7 font-bold text-3xl text-white mb-3 mt-2'>Scores</h1>
+      <h1 className='ml-7 font-bold text-3xl text-white mb-3 mt-2'>NBA Scores</h1>
       <DateTabs />
       { loading &&
             <div className='text-white font-bold text-xl flex justify-center mt-24'>
@@ -19,7 +19,7 @@ const NBApage = () => {
         && ( scores.length === 0 
           ? (
             <div>
-              <p className="ml-5 text-white">No scores available</p>
+              <p className="ml-5 text-white text-center font-extrabold text-2xl">No scores available</p>
             </div>
             )
           : (

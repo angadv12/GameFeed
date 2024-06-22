@@ -2,7 +2,7 @@ const Comment = require('../models/Comment');
 
 const getComments = async (req, res) => {
     try {
-        const comments = await Comment.find({ gameId: req.params.gameId }).populate('userId', 'name profilePicture');
+        const comments = await Comment.find({ gameId: req.params.gameId }).populate('userId', 'username profilePicture');
         res.json(comments);
     } catch (error) {
         console.error('Error fetching comments:', error.message, error.stack); // Log detailed error
@@ -22,7 +22,7 @@ const createComment = async (req, res) => {
         const newComment = new Comment({ gameId, userId, text });
         await newComment.save();
 
-        const populatedComment = await newComment.populate('userId', 'name profilePicture')
+        const populatedComment = await newComment.populate('userId', 'username profilePicture')
 
         res.status(201).json(populatedComment);
     } catch (error) {

@@ -1,28 +1,58 @@
 import { toast } from 'react-toastify';
 import 'react-toastify/dist/ReactToastify.css';
+import { useContext } from 'react';
+import { AuthContext } from '../features/auth/AuthContext';
 
-const ConfirmationAlert = ({ onConfirm, onCancel }) => (
-  <div className="text-white p-4">
-    <h2 className="text-lg font-bold">Confirm Logout</h2>
-    <p className="my-5">Are you sure you want to logout?</p>
-    <div className="flex justify-between">
-      <button
-        onClick={onConfirm}
-        className="bg-blue-500 text-white px-4 py-2 rounded-md ml-3"
-      >
-        Yes, Logout
-      </button>
-      <button
-        onClick={onCancel}
-        className="bg-zinc-600 text-white px-4 py-2 mr-4 rounded-md"
-      >
-        Cancel
-      </button>
+const ConfirmationAlert = ({ type, onConfirm, onCancel }) => {
+  const { logout, deleteAccount } = useContext(AuthContext);
+  
+  return (
+    <div className="text-white p-4">
+      { type === 'logout' && (
+        <>
+        <h2 className="text-lg font-bold">Confirm Logout</h2>
+        <p className="my-5">Are you sure you want to logout?</p>
+        <div className="flex justify-between">
+          <button
+            onClick={onConfirm}
+            className="bg-blue-500 text-white px-4 py-2 rounded-md ml-3 text-nowrap"
+          >
+            Yes, Logout
+          </button>
+          <button
+            onClick={onCancel}
+            className="bg-zinc-600 text-white px-4 py-2 mr-4 rounded-md text-nowrap"
+          >
+            Cancel
+          </button>
+        </div>
+        </>
+      )}
+      { type === 'deleteAccount' && (
+        <>
+        <h2 className="text-lg font-bold">Confirm Account Deletion</h2>
+        <p className="my-5">Are you sure you want to delete your account?</p>
+        <div className="flex justify-between">
+          <button
+            onClick={onConfirm}
+            className="bg-blue-500 text-white px-4 py-2 rounded-md ml-0 text-nowrap"
+          >
+            Yes, Delete Account
+          </button>
+          <button
+            onClick={onCancel}
+            className="bg-zinc-600 text-white px-4 py-2 ml-4 mr-4 rounded-md text-nowrap"
+          >
+            Cancel
+          </button>
+        </div>
+        </>
+      )}
     </div>
-  </div>
-);
+  )
+};
 
-const showConfirmationAlert = (onConfirm) => {
+const showConfirmationAlert = (type, onConfirm) => {
   const handleConfirm = () => {
     onConfirm();
     toast.dismiss();
@@ -33,7 +63,7 @@ const showConfirmationAlert = (onConfirm) => {
   };
 
   toast(
-    <ConfirmationAlert onConfirm={handleConfirm} onCancel={handleCancel} />,
+    <ConfirmationAlert type={type} onConfirm={handleConfirm} onCancel={handleCancel} />,
     {
       position: "top-center",
       autoClose: false,

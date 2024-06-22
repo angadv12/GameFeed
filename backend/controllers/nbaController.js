@@ -98,8 +98,8 @@ const getGameDetails = asyncHandler(async (req, res) => {
   if(boxScoreExists) {
     const gameDetails = await page.evaluate(() => {
       const teams = {
-        away: [],
-        home: []
+        away: {players: [], tops: {}},
+        home: {players: [], tops: {}}
       };
   
       const awayTeamRows = document.querySelectorAll('div.StatsTable_st__g2iuW table')[0].querySelectorAll('tbody tr');
@@ -107,6 +107,9 @@ const getGameDetails = asyncHandler(async (req, res) => {
       const teamNames = document.querySelectorAll('.GameBoxscoreTeamHeader_gbt__b9B6g div');
   
       const processRows = (rows, team) => {
+        let ptsMax = 0, rebMax = 0, astMax = 0, stlMax = 0, blkMax = 0;
+        let ptsPlayer = '', rebPlayer = '', astPlayer = '', stlPlayer = '', blkPlayer = '';
+        const players = []
         rows.forEach(row => {
           const playerNameCell = row.querySelector('.GameBoxscoreTablePlayer_gbpNameShort__hjcGB');
           if (playerNameCell) {
@@ -124,7 +127,7 @@ const getGameDetails = asyncHandler(async (req, res) => {
                   player: playerName,
                   comment: comment
                 };
-                team.push(playerStats);
+                players.push(playerStats);
               } else {
                 const cols = row.querySelectorAll('.GameBoxscoreTable_stat__jWIuU');
                 const getStatValue = (col) => {
@@ -157,12 +160,25 @@ const getGameDetails = asyncHandler(async (req, res) => {
                     PTS: parseInt(getStatValue(cols[18]), 10) || 0,
                     '+/-': parseInt(getStatValue(cols[19]), 10) || 0
                   };
-                  team.push(playerStats);
+                  playerStats.PTS > ptsMax && (ptsMax = playerStats.PTS, (ptsPlayer = playerStats.player));
+                  playerStats.REB > rebMax && (rebMax = playerStats.REB, (rebPlayer = playerStats.player));
+                  playerStats.AST > astMax && (astMax = playerStats.AST, (astPlayer = playerStats.player));
+                  playerStats.STL > stlMax && (stlMax = playerStats.STL, (stlPlayer = playerStats.player));
+                  playerStats.BLK > blkMax && (blkMax = playerStats.BLK, (blkPlayer = playerStats.player));
+                  players.push(playerStats);
                 }
               }
             }
           }
         });
+        team.players = players
+        team.tops = {
+          topScorer: ptsPlayer,
+          topRebounder: rebPlayer,
+          topAssister: astPlayer,
+          topStealer: stlPlayer,
+          topBlocker: blkPlayer
+        }
       };
   
       processRows(awayTeamRows, teams.away);
