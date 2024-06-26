@@ -39,13 +39,18 @@ const SportsNewsPage = () => {
                 <ul className='mx-10'>
                     {news.map((article, index) => (
                         article.title !== '[Removed]' &&
-                            <li key={index} className='bg-bgNavbar rounded-lg flex flex-col px-8 py-4 my-4'>
-                                <h2 className='font-extrabold text-2xl text-red-400 italic'>{article.title}</h2>
-                                <p className='pl-8 font-bold text-lg text-white mt-2 mb-4'> {article.description && <> - {article.description}</>}</p>
-                                <a className='ml-8 px-4 w-fit flex items-center text-white hover:text-blue-400' href={article.url} target="_blank" rel="noopener noreferrer">
-                                    <p className='text-base font-semibold'> Read More </p>
-                                    <FaArrowUpRightFromSquare className='ml-2'/>
-                                </a>
+                            <li key={index} className='bg-bgNavbar rounded-lg flex px-8 py-4 my-4'>
+                                <div>
+                                    { article.urlToImage && <img src={article.urlToImage} alt={article.title} className='h-48 w-64 object-cover pr-4'/> }
+                                </div>
+                                <div className='flex flex-col'>
+                                    <h2 className='font-extrabold text-2xl text-red-400 italic'>{article.title}</h2>
+                                    <p className='pl-8 font-bold text-lg text-white mt-2 mb-4'> {article.description && <> - {article.description}</>}</p>
+                                    <a className='ml-8 px-4 w-fit flex items-center text-white hover:text-blue-400' href={article.url} target="_blank" rel="noopener noreferrer">
+                                        <p className='text-base font-semibold'> Read More </p>
+                                        <FaArrowUpRightFromSquare className='ml-2'/>
+                                    </a>
+                                </div>
                             </li>
                     ))}
                 </ul>

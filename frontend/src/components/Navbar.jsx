@@ -1,7 +1,7 @@
 import { Link, useLocation } from "react-router-dom";
 import logo from '../assets/BallLogo.png';
-import { FaArrowRightToBracket, FaUser, FaArrowRightFromBracket, FaArrowTurnDown,
-  FaBasketball, FaFootball, FaBaseballBatBall, FaHockeyPuck, FaNewspaper
+import { FaArrowRightToBracket, FaUser, FaArrowRightFromBracket, FaArrowRight,
+  FaBasketball, FaFootball, FaBaseball, FaHockeyPuck, FaNewspaper
  } from 'react-icons/fa6';
 import { useContext, useState, useEffect, useRef } from 'react';
 import { AuthContext } from '../features/auth/AuthContext';
@@ -70,7 +70,7 @@ const Navbar = () => {
           to='/mlb' 
           className={`relative text-white text-lg font-semibold px-2 pt-1 pb-1 mx-3 flex flex-row justify-center items-center ${selectedTab === '/mlb' ? 'after:absolute after:left-0 after:right-0 after:-bottom-4 after:h-0.5 after:bg-red-500' : ''}`}
         >
-          <FaBaseballBatBall className="mr-2 text-red-400"/> MLB
+          <FaBaseball className="mr-2 text-red-400"/> MLB
         </Link>
         <Link 
           to='/sports-news' 
@@ -93,10 +93,10 @@ const Navbar = () => {
                 <div className="absolute right-0 w-48 bg-bgNavbar rounded-md shadow-lg z-50 mt-4">
                   <div className="py-2 text-white">
                     <p className="flex items-center px-4">
-                      <FaUser className="mr-2"/> {user.username} <FaArrowTurnDown className=" ml-2 mt-3" />
+                      <FaUser className="mr-2"/> {user.username}
                     </p>
                     <Link to={`/profile/`} className="px-4 py-1 mt-2 hover:bg-zinc-700 hover:rounded-lg flex flex-col justify-center">
-                      <p className="ml-4"> See Profile</p>
+                      <p className="ml-2 flex items-center"> <FaArrowRight className="mr-2"/> See Profile</p>
                     </Link>
                     <button
                       onClick={handleLogout}

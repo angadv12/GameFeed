@@ -23,9 +23,11 @@ const NBApage = () => {
             </div>
             )
           : (
-          <div className="ml-5 flex flex-row items-center">
+          <div className="ml-5 flex flex-wrap items-center">
             {scores.map((game, index) => (
-              <ScoreCard key={index} game={game} />
+              <div className='mb-8'>
+                <ScoreCard key={index} game={game} />
+              </div>
             ))}
           </div>
           )

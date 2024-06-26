@@ -6,7 +6,7 @@ Sports feed app using the MERN stack.
 
 ## Description
 
-GameFeed is a sports feed application built using the MERN (MongoDB, Express.js, React, Node.js) stack. It provides real-time updates and information about various sports events. The application utilizes Tailwind CSS for styling, ensuring a modern and responsive user interface. Additionally, GameFeed employs Puppeteer for web scraping live scores, player stats, and other relevant data directly from NBA.com, offering users up-to-date and comprehensive sports information.
+GameFeed is a sports feed application built using the MERN (MongoDB, Express.js, React, Node.js) stack. It provides real-time updates and information about various sports events and breaking sports news. The application utilizes Tailwind CSS for styling, ensuring a modern and responsive user interface. Additionally, GameFeed employs Puppeteer for web scraping live scores, player stats, and other relevant data directly from NBA.com, offering users up-to-date and comprehensive sports information, and newsapi.org for the latest news in the sports world.
 
 ## Features
 
@@ -32,10 +32,12 @@ Contributions are welcome! To contribute to GameFeed, please follow these steps:
 ## License
 This project is licensed under the MIT License - see the LICENSE file for details.
 
-- Acknowledgments
+## Acknowledgments
 - MongoDB
 - Express.js
 - React
 - Node.js
 - Tailwind CSS
 - Puppeteer
+- NBA.com
+- newsapi.org

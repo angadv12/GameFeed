@@ -58,11 +58,11 @@ const Comments = ({gameId}) => {
     return (
         <div className='ml-4'>
             <div className='flex items-start'>
-                <div className='bg-bgNavbar my-4 rounded-lg w-1/3'>
+                <div className='bg-bgNavbar my-4 rounded-lg w-1/2'>
                     <h2 className='text-3xl font-bold pl-6 pt-2 text-white'> Comments </h2>
                     <ul className='text-white bg-bgNavbar py-4 px-4 rounded-md'>
                         {comments.map((comment, index) => (
-                            <li key={index} className='bg-zinc-800 px-4 py-3 max-w-96 rounded-lg mb-3'>
+                            <li key={index} className='bg-zinc-800 px-4 py-3 max-w-xl rounded-lg mb-3'>
                                 <div className='flex items-center pb-2'>
                                     <img className="h-12 w-12 rounded-full object-cover" src={comment.userId.profilePicture} alt={comment.userId.username} />
                                     <p className=' pl-3 text-xl font-bold'>@{comment.userId.username}</p>
@@ -73,7 +73,7 @@ const Comments = ({gameId}) => {
                         ))}
                     </ul>
                 </div>
-                <form onSubmit={handleSubmit} className='flex flex-col items-start mb-8 mt-4 pl-20'>
+                <form onSubmit={handleSubmit} className='flex flex-col items-start mb-8 mt-4 ml-10 bg-bgNavbar py-4 px-4 rounded-lg'>
                     <h1 className='text-white font-bold text-3xl pb-2 pl-2'> Add Comment: </h1>
                     <textarea className="text-white bg-zinc-800 w-96 h-24 rounded-md mb-2 px-4 py-2" value={text} onChange={(e) => setText(e.target.value)} required></textarea>
                     <button type="submit" className='bg-blue-500 rounded-2xl py-2 px-4 text-white'>Post Comment</button>

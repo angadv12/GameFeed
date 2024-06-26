@@ -19,16 +19,16 @@ const HomePage = () => {
       </div>
       <div className="features-section flex justify-around -mt-8 animate-slideIn px-4">
         <div className="feature bg-red-500 p-8 rounded-lg transform transition-transform duration-300 hover:scale-105 w-full max-w-xs">
-          <h2 className="text-2xl font-semibold mb-4">Live Scores</h2>
-          <p>Get real-time updates on your favorite games and teams.</p>
+          <h2 className="text-2xl font-extrabold mb-4">Live Scores</h2>
+          <p className='font-bold'>Get real-time updates on your favorite games and teams.</p>
         </div>
         <div className="feature bg-blue-600 p-8 rounded-lg transform transition-transform duration-300 hover:scale-105 w-full max-w-xs">
-          <h2 className="text-2xl font-semibold mb-4">News & Updates</h2>
-          <p>Stay informed with the latest news in the world of sports.</p>
+          <h2 className="text-2xl font-extrabold mb-4">News & Updates</h2>
+          <p className='font-bold'>Stay informed with the latest news in the world of sports.</p>
         </div>
         <div className="feature bg-green-600 p-8 rounded-lg transform transition-transform duration-300 hover:scale-105 w-full max-w-xs">
-          <h2 className="text-2xl font-semibold mb-4">Player Stats</h2>
-          <p>Track the performance of your favorite players.</p>
+          <h2 className="text-2xl font-extrabold mb-4">Player Stats</h2>
+          <p className='font-bold'>Track the performance of your favorite players.</p>
         </div>
       </div>
       <footer className="footer mt-16 py-4 w-full bg-bgNavbar">

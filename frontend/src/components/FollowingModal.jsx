@@ -1,7 +1,7 @@
 
 const FollowingModal = ({ following, onClose }) => {
   return (
-    <div className="fixed inset-0 bg-black bg-opacity-50 flex justify-center items-center z-50">
+    <div className="fixed inset-0 bg-black bg-opacity-50 backdrop-blur-sm flex justify-center items-center z-50">
       <div className="bg-bgNavbar rounded-xl p-6 w-96 max-h-[80vh] overflow-y-auto">
         <h2 className="text-white text-2xl font-bold mb-4">Following</h2>
         {following.length > 0 ? (

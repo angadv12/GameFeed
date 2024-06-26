@@ -56,7 +56,7 @@ const getScores = asyncHandler(async (req, res) => {
           games.push({
             gameId,
             gameStatus: gameStatus ? gameStatus.textContent.trim() : 'no game status',
-            seriesInfo: seriesInfoText ? seriesInfoText : 'no series info',
+            seriesInfo: seriesInfoText ? seriesInfoText : null,
             awayTeam,
             homeTeam
           });
@@ -109,6 +109,7 @@ const getGameDetails = asyncHandler(async (req, res) => {
       const processRows = (rows, team) => {
         let ptsMax = 0, rebMax = 0, astMax = 0, stlMax = 0, blkMax = 0;
         let ptsPlayer = '', rebPlayer = '', astPlayer = '', stlPlayer = '', blkPlayer = '';
+        let ptsFace = '', rebFace = '', astFace = '', stlFace = '', blkFace = '';
         const players = []
         rows.forEach(row => {
           const playerNameCell = row.querySelector('.GameBoxscoreTablePlayer_gbpNameShort__hjcGB');
@@ -160,11 +161,11 @@ const getGameDetails = asyncHandler(async (req, res) => {
                     PTS: parseInt(getStatValue(cols[18]), 10) || 0,
                     '+/-': parseInt(getStatValue(cols[19]), 10) || 0
                   };
-                  playerStats.PTS > ptsMax && (ptsMax = playerStats.PTS, (ptsPlayer = playerStats.player));
-                  playerStats.REB > rebMax && (rebMax = playerStats.REB, (rebPlayer = playerStats.player));
-                  playerStats.AST > astMax && (astMax = playerStats.AST, (astPlayer = playerStats.player));
-                  playerStats.STL > stlMax && (stlMax = playerStats.STL, (stlPlayer = playerStats.player));
-                  playerStats.BLK > blkMax && (blkMax = playerStats.BLK, (blkPlayer = playerStats.player));
+                  playerStats.PTS > ptsMax && (ptsMax = playerStats.PTS, ptsPlayer = playerStats.player, ptsFace = playerStats.face);
+                  playerStats.REB > rebMax && (rebMax = playerStats.REB, rebPlayer = playerStats.player, rebFace = playerStats.face);
+                  playerStats.AST > astMax && (astMax = playerStats.AST, astPlayer = playerStats.player, astFace = playerStats.face);
+                  playerStats.STL > stlMax && (stlMax = playerStats.STL, stlPlayer = playerStats.player, stlFace = playerStats.face);
+                  playerStats.BLK > blkMax && (blkMax = playerStats.BLK, blkPlayer = playerStats.player, blkFace = playerStats.face);
                   players.push(playerStats);
                 }
               }
@@ -173,11 +174,31 @@ const getGameDetails = asyncHandler(async (req, res) => {
         });
         team.players = players
         team.tops = {
-          topScorer: ptsPlayer,
-          topRebounder: rebPlayer,
-          topAssister: astPlayer,
-          topStealer: stlPlayer,
-          topBlocker: blkPlayer
+          topScorer: {
+            player: ptsPlayer,
+            count: ptsMax,
+            face: ptsFace
+          },
+          topRebounder: {
+            player: rebPlayer,
+            count: rebMax,
+            face: rebFace
+          },
+          topAssister: {
+            player: astPlayer,
+            count: astMax,
+            face: astFace
+          },
+          topStealer: {
+            player: stlPlayer,
+            count: stlMax,
+            face: stlFace
+          },
+          topBlocker: {
+            player: blkPlayer,
+            count: blkMax,
+            face: blkFace
+          }
         }
       };
   
