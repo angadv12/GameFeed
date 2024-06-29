@@ -1,5 +1,6 @@
 import { useEffect, useState } from 'react'
 import { FadeLoader } from 'react-spinners'
+import { FaTrophy } from 'react-icons/fa6'
 
 const GameInsights = ({gameId}) => {
     const [gameDetails, setGameDetails] = useState([])
@@ -30,7 +31,7 @@ const GameInsights = ({gameId}) => {
 
     return (
       <section>
-        <h1 className='font-extrabold text-4xl text-white ml-10 mt-4'> Top Performers </h1>
+        <h1 className='font-extrabold text-4xl text-white ml-10 mt-4 flex items-center'> Top Performers <FaTrophy className='ml-4 text-yellow-500'/> </h1>
         { loading ? (
           <div className='text-white font-bold text-xl flex justify-center mt-24'>
             <FadeLoader color="#ffffff" loading={loading} margin={2} />

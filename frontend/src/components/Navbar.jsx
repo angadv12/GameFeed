@@ -1,4 +1,4 @@
-import { Link, useLocation } from "react-router-dom";
+import { Link, useLocation, useNavigate } from "react-router-dom";
 import logo from '../assets/BallLogo.png';
 import { FaArrowRightToBracket, FaUser, FaArrowRightFromBracket, FaArrowRight,
   FaBasketball, FaFootball, FaBaseball, FaHockeyPuck, FaNewspaper
@@ -13,13 +13,17 @@ const Navbar = () => {
   const dropdownRef = useRef(null);
   const location = useLocation(); // Get the current location
   const [selectedTab, setSelectedTab] = useState(location.pathname); // Track the selected tab
+  const navigate = useNavigate();
 
   const toggleDropdown = () => {
     setDropdownOpen(!dropdownOpen);
   };
 
-  const handleLogout = () => {
-    showConfirmationAlert('logout', logout);
+  const handleLogout = async () => {
+    await showConfirmationAlert('logout', () => {
+      logout()
+      navigate('/')
+    });
   };
 
   const handleClickOutside = (event) => {

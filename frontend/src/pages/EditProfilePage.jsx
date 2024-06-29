@@ -12,6 +12,7 @@ const EditProfilePage = () => {
   const [password, setPassword] = useState('')
   const [profilePicture, setProfilePicture] = useState(null)
   const [preview, setPreview] = useState('')
+  const navigate = useNavigate()
 
   const handleProfilePictureChange = (e) => {
     const file = e.target.files[0]
@@ -29,10 +30,11 @@ const EditProfilePage = () => {
   }, [user])
 
   const handleDeleteAccount = () => {
-    showConfirmationAlert('deleteAccount', deleteAccount)
+    showConfirmationAlert('deleteAccount', () => {
+      deleteAccount()
+      navigate('/')
+    })
   }
-
-  const navigate = useNavigate()
 
   const handleUpdate = async (e) => {
     e.preventDefault()

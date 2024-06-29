@@ -181,11 +181,23 @@ const deleteUser = asyncHandler(async (req, res) => {
     })
   }
 
+  // Update all followers of the user
+  await User.updateMany(
+    { following: userId },
+    { $pull: { following: userId } }
+  )
+
+  // Update all users followed by the user
+  await User.updateMany(
+    { followers: userId },
+    { $pull: { followers: userId } }
+  )
+
   // Delete the user
-  await User.deleteOne({ _id: userId });
+  await User.deleteOne({ _id: userId })
 
   // Delete associated comments
-  await Comment.deleteMany({ userId: userId });
+  await Comment.deleteMany({ userId: userId })
 
   res.clearCookie('refreshToken', {
     httpOnly: true,
@@ -291,13 +303,15 @@ const followUser = asyncHandler(async (req, res) => {
       throw new Error('You already follow this user');
   }
 
-  await User.findByIdAndUpdate(userToFollow.id, {
-      $push: { followers: currentUser.id }
-  });
+  await User.updateOne(
+      { _id: userToFollow.id},
+      { $push: { followers: currentUser.id } }
+  );
 
-  await User.findByIdAndUpdate(currentUser.id, {
-      $push: { following: userToFollow.id }
-  });
+  await User.updateOne(
+    { _id: currentUser.id},
+    { $push: { following: userToFollow.id } }
+  );
 
   res.status(200).json({ message: `You are now following ${userToFollow.username}` });
 });
@@ -319,13 +333,15 @@ const unfollowUser = asyncHandler(async (req, res) => {
       throw new Error('You do not follow this user');
   }
 
-  await User.findByIdAndUpdate(userToUnfollow.id, {
-      $pull: { followers: currentUser.id }
-  });
+  await User.updateOne(
+    { _id: userToUnfollow.id},
+    { $pull: { followers: currentUser.id } }
+);
 
-  await User.findByIdAndUpdate(currentUser.id, {
-      $pull: { following: userToUnfollow.id }
-  });
+await User.updateOne(
+  { _id: currentUser.id},
+  { $pull: { following: userToUnfollow.id } }
+);
 
   res.status(200).json({ message: `You have unfollowed ${userToUnfollow.username}` });
 });

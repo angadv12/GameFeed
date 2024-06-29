@@ -1,10 +1,7 @@
-import { toast } from 'react-toastify';
-import 'react-toastify/dist/ReactToastify.css';
-import { useContext } from 'react';
-import { AuthContext } from '../features/auth/AuthContext';
+import { toast } from 'react-toastify'
+import 'react-toastify/dist/ReactToastify.css'
 
 const ConfirmationAlert = ({ type, onConfirm, onCancel }) => {
-  const { logout, deleteAccount } = useContext(AuthContext);
   
   return (
     <div className="text-white p-4">
@@ -50,17 +47,17 @@ const ConfirmationAlert = ({ type, onConfirm, onCancel }) => {
       )}
     </div>
   )
-};
+}
 
 const showConfirmationAlert = (type, onConfirm) => {
   const handleConfirm = () => {
-    onConfirm();
-    toast.dismiss();
-  };
+    onConfirm()
+    toast.dismiss()
+  }
 
   const handleCancel = () => {
-    toast.dismiss();
-  };
+    toast.dismiss()
+  }
 
   toast(
     <ConfirmationAlert type={type} onConfirm={handleConfirm} onCancel={handleCancel} />,
@@ -78,7 +75,7 @@ const showConfirmationAlert = (type, onConfirm) => {
         boxShadow: "0 0.125rem 0.25rem rgba(0, 0, 0, 0.075)"
       }
     }
-  );
-};
+  )
+}
 
 export default showConfirmationAlert;

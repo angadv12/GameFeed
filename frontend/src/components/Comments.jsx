@@ -1,6 +1,7 @@
 import { useEffect, useState } from 'react'
 import { formatDistanceToNowStrict } from 'date-fns'
 import { FadeLoader } from 'react-spinners'
+import { Link } from 'react-router-dom'
 
 const Comments = ({gameId}) => {
     const [comments, setComments] = useState([])
@@ -64,8 +65,10 @@ const Comments = ({gameId}) => {
                         {comments.map((comment, index) => (
                             <li key={index} className='bg-zinc-800 px-4 py-3 max-w-xl rounded-lg mb-3'>
                                 <div className='flex items-center pb-2'>
-                                    <img className="h-12 w-12 rounded-full object-cover" src={comment.userId.profilePicture} alt={comment.userId.username} />
-                                    <p className=' pl-3 text-xl font-bold'>@{comment.userId.username}</p>
+                                    <Link to={`/profile/${comment.userId.username}`} className='flex items-center'>
+                                        <img className='h-12 w-12 rounded-full object-cover' src={comment.userId.profilePicture} alt={comment.userId.username} />
+                                        <p className='pl-3 text-xl font-bold'>@{comment.userId.username}</p>
+                                    </Link>
                                     <p className='pl-3 font-medium text-nowrap'> {formatDistanceToNowStrict(new Date(comment.createdAt), { addSuffix: true })} </p>
                                 </div>
                                 <p className='font-semibold pl-2'>{comment.text}</p>

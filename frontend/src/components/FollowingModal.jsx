@@ -1,5 +1,12 @@
+import { useNavigate } from "react-router-dom";
 
 const FollowingModal = ({ following, onClose }) => {
+  const navigate = useNavigate();
+
+  const handleNavigate = (username) => {
+    navigate(`/profile/${username}`)
+    onClose()
+  };
   return (
     <div className="fixed inset-0 bg-black bg-opacity-50 backdrop-blur-sm flex justify-center items-center z-50">
       <div className="bg-bgNavbar rounded-xl p-6 w-96 max-h-[80vh] overflow-y-auto">
@@ -8,7 +15,9 @@ const FollowingModal = ({ following, onClose }) => {
           <ul>
             {following.map((person) => (
               <li key={person._id} className="text-white mb-2 p-2 bg-zinc-800 rounded">
+                <button onClick={() => handleNavigate(person.username)}>
                 {person.name} (@{person.username})
+                </button>
               </li>
             ))}
           </ul>
